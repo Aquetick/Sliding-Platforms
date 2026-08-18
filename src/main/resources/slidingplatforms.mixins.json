@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "mc.slidingplatforms.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "sliding-platforms-refmap.json",
+  "mixins": [
+    "ResourcePackStatusMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=north": { "model": "slidingplatforms:block/platform_controller" },
+    "facing=east":  { "model": "slidingplatforms:block/platform_controller", "y": 90 },
+    "facing=south": { "model": "slidingplatforms:block/platform_controller", "y": 180 },
+    "facing=west":  { "model": "slidingplatforms:block/platform_controller", "y": 270 },
+    "facing=up":    { "model": "slidingplatforms:block/platform_controller", "x": -90 },
+    "facing=down":  { "model": "slidingplatforms:block/platform_controller", "x": 90 }
+  }
+}

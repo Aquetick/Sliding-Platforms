@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    " R ",
+    " I "
+  ],
+  "key": {
+    "B": { "item": "minecraft:stone_button" },
+    "R": { "item": "minecraft:redstone" },
+    "I": { "item": "minecraft:iron_ingot" }
+  },
+  "result": { "item": "slidingplatforms:remote_switch", "count": 1 }
+}

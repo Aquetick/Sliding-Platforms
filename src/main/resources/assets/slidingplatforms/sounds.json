@@ -1,0 +1,11 @@
+{
+  "platform_hum": {
+    "sounds": [
+      {
+        "name": "slidingplatforms:platform_hum",
+        "stream": true
+      }
+    ],
+    "subtitle": "subtitles.slidingplatforms.platform_hum"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "RPR",
+    "III"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "R": { "item": "minecraft:redstone" },
+    "P": { "item": "minecraft:piston" }
+  },
+  "result": { "item": "slidingplatforms:platform_controller", "count": 1 }
+}

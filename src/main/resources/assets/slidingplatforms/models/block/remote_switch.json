@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "slidingplatforms:block/remote_switch_side",
+    "end": "slidingplatforms:block/controller_top"
+  }
+}

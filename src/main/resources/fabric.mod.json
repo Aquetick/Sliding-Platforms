@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "slidingplatforms",
+  "version": "${version}",
+  "name": "Sliding Platforms",
+  "description": "Working sliding platforms built from any blocks: doors, elevator cabins, even rail-free transit lines. Real motion, block-by-block collision, shared custom sounds, platform glow, cascade curtains and a full server config menu.",
+  "authors": ["Handmade"],
+  "license": "MIT",
+  "icon": "assets/slidingplatforms/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mc.slidingplatforms.SlidingPlatforms"
+    ],
+    "client": [
+      "mc.slidingplatforms.client.SlidingPlatformsClient"
+    ]
+  },
+  "mixins": [
+    "slidingplatforms.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*",
+    "minecraft": "~1.20.1",
+    "java": ">=17"
+  }
+}
