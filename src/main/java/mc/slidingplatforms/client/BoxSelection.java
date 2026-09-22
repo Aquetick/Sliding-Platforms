@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.SlidingPlatforms;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -68,7 +70,7 @@ public class BoxSelection {
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeBlockPos(anchor);
                 buf.writeBlockPos(pos);
-                ClientPlayNetworking.send(SlidingPlatforms.BOX_SELECT, buf);
+                ClientNet.send(SlidingPlatforms.BOX_SELECT, buf);
                 anchor = null;
                 player.swingHand(hand);
             }

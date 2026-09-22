@@ -30,10 +30,10 @@ public class PlatformRegistry extends PersistentState {
 
     private static PlatformRegistry state(ServerWorld world) {
         return world.getServer().getOverworld().getPersistentStateManager().getOrCreate(
-                PlatformRegistry::fromNbt, PlatformRegistry::new, STATE_ID);
+                new PersistentState.Type<>(PlatformRegistry::new, PlatformRegistry::fromNbt, null), STATE_ID);
     }
 
-    public static PlatformRegistry fromNbt(NbtCompound nbt) {
+    public static PlatformRegistry fromNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
         PlatformRegistry r = new PlatformRegistry();
         MAP.clear();
         NbtList list = nbt.getList("controllers", NbtElement.COMPOUND_TYPE);
@@ -41,7 +41,7 @@ public class PlatformRegistry extends PersistentState {
             NbtCompound e = list.getCompound(i);
             try {
                 RegistryKey<World> dim = RegistryKey.of(net.minecraft.registry.RegistryKeys.WORLD,
-                        new Identifier(e.getString("dim")));
+                        Identifier.of(e.getString("dim")));
                 BlockPos pos = BlockPos.fromLong(e.getLong("pos"));
                 MAP.computeIfAbsent(dim, k -> new HashMap<>()).put(pos, e.getString("name"));
             } catch (Exception ignored) {  }
@@ -50,7 +50,7 @@ public class PlatformRegistry extends PersistentState {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
         NbtList list = new NbtList();
         synchronized (PlatformRegistry.class) {
             MAP.forEach((dim, m) -> m.forEach((pos, name) -> {

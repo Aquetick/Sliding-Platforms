@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.FloorSelectScreenHandler;
 import mc.slidingplatforms.SlidingPlatforms;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -90,7 +92,7 @@ public class FloorSelectScreen extends HandledScreen<FloorSelectScreenHandler> {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBlockPos(handler.screenPos);
         buf.writeBlockPos(row.pos());
-        ClientPlayNetworking.send(SlidingPlatforms.RIDE_TO, buf);
+        ClientNet.send(SlidingPlatforms.RIDE_TO, buf);
         this.close();
     }
 
@@ -112,7 +114,7 @@ public class FloorSelectScreen extends HandledScreen<FloorSelectScreenHandler> {
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
+        this.renderBackground(ctx, mouseX, mouseY, delta);
         super.render(ctx, mouseX, mouseY, delta);
         ctx.drawCenteredTextWithShadow(this.textRenderer, this.title,
                 this.x + this.backgroundWidth / 2, this.y + 6, 0xFFFFFF);

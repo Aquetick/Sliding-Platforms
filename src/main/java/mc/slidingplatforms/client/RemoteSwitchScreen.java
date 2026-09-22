@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.RemoteSwitchScreenHandler;
 import mc.slidingplatforms.SlidingPlatforms;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -97,7 +99,7 @@ public class RemoteSwitchScreen extends HandledScreen<RemoteSwitchScreenHandler>
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBlockPos(handler.pos);
         buf.writeBlockPos(row.pos());
-        ClientPlayNetworking.send(SlidingPlatforms.SWITCH_TOGGLE, buf);
+        ClientNet.send(SlidingPlatforms.SWITCH_TOGGLE, buf);
 
         rebuildRows();
     }
@@ -119,7 +121,7 @@ public class RemoteSwitchScreen extends HandledScreen<RemoteSwitchScreenHandler>
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
+        this.renderBackground(ctx, mouseX, mouseY, delta);
         super.render(ctx, mouseX, mouseY, delta);
         ctx.drawCenteredTextWithShadow(this.textRenderer, this.title,
                 this.x + this.backgroundWidth / 2, this.y + 6, 0xFFFFFF);

@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.ScreenSettingsScreenHandler;
 import mc.slidingplatforms.SlidingPlatforms;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -114,7 +116,7 @@ public class ScreenSettingsScreen extends HandledScreen<ScreenSettingsScreenHand
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBlockPos(handler.screenPos);
         buf.writeVarInt(callFloor);
-        ClientPlayNetworking.send(SlidingPlatforms.SCREEN_CALL, buf);
+        ClientNet.send(SlidingPlatforms.SCREEN_CALL, buf);
     }
 
     private void buildSettingsTab() {
@@ -229,7 +231,7 @@ public class ScreenSettingsScreen extends HandledScreen<ScreenSettingsScreenHand
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBlockPos(handler.screenPos);
         buf.writeString(nm);
-        ClientPlayNetworking.send(SlidingPlatforms.SCREEN_NAME, buf);
+        ClientNet.send(SlidingPlatforms.SCREEN_NAME, buf);
     }
 
     private void sendChainName() {
@@ -238,7 +240,7 @@ public class ScreenSettingsScreen extends HandledScreen<ScreenSettingsScreenHand
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBlockPos(handler.screenPos);
         buf.writeString(nm);
-        ClientPlayNetworking.send(SlidingPlatforms.CHAIN_RENAME, buf);
+        ClientNet.send(SlidingPlatforms.CHAIN_RENAME, buf);
 
     }
 
@@ -246,7 +248,7 @@ public class ScreenSettingsScreen extends HandledScreen<ScreenSettingsScreenHand
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBlockPos(handler.screenPos);
         buf.writeString(target);
-        ClientPlayNetworking.send(SlidingPlatforms.CHAIN_LINK, buf);
+        ClientNet.send(SlidingPlatforms.CHAIN_LINK, buf);
 
     }
 
@@ -255,14 +257,14 @@ public class ScreenSettingsScreen extends HandledScreen<ScreenSettingsScreenHand
         buf.writeBlockPos(handler.screenPos);
         buf.writeBlockPos(row.pos());
         buf.writeVarInt(num);
-        ClientPlayNetworking.send(SlidingPlatforms.SCREEN_FLOOR_NUM, buf);
+        ClientNet.send(SlidingPlatforms.SCREEN_FLOOR_NUM, buf);
     }
 
     private void sendRemove(ScreenSettingsScreenHandler.FloorRow row) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBlockPos(handler.screenPos);
         buf.writeBlockPos(row.pos());
-        ClientPlayNetworking.send(SlidingPlatforms.SCREEN_FLOOR_DEL, buf);
+        ClientNet.send(SlidingPlatforms.SCREEN_FLOOR_DEL, buf);
 
     }
 
@@ -367,7 +369,7 @@ public class ScreenSettingsScreen extends HandledScreen<ScreenSettingsScreenHand
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
+        this.renderBackground(ctx, mouseX, mouseY, delta);
         super.render(ctx, mouseX, mouseY, delta);
         ctx.drawCenteredTextWithShadow(this.textRenderer, this.title,
                 this.x + this.backgroundWidth / 2, this.y + 6, 0xFFFFFF);

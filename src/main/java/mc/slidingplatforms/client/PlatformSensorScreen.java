@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.PlatformControllerBlockEntity;
 import mc.slidingplatforms.PlatformSensorScreenHandler;
 import mc.slidingplatforms.SlidingPlatforms;
@@ -88,14 +90,14 @@ public class PlatformSensorScreen extends HandledScreen<PlatformSensorScreenHand
         btnZone = addDrawableChild(ButtonWidget.builder(zoneLabel(), b -> {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeBlockPos(handler.getPos());
-            ClientPlayNetworking.send(SlidingPlatforms.GUI_SENSOR_ZONE, buf);
+            ClientNet.send(SlidingPlatforms.GUI_SENSOR_ZONE, buf);
 
         }).dimensions(left + 8, top + 134, 132, 18).build());
         btnZoneClear = addDrawableChild(ButtonWidget.builder(Text.literal("✕"), b -> {
             zoneX = zoneY = zoneZ = 0;
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeBlockPos(handler.getPos());
-            ClientPlayNetworking.send(SlidingPlatforms.ZONE_CLEAR, buf);
+            ClientNet.send(SlidingPlatforms.ZONE_CLEAR, buf);
             refreshZoneWidgets();
         }).dimensions(left + 144, top + 134, 24, 18).build());
         refreshZoneWidgets();
@@ -179,7 +181,7 @@ public class PlatformSensorScreen extends HandledScreen<PlatformSensorScreenHand
         buf.writeBoolean(invert);
         buf.writeString(names, 96);
         buf.writeVarInt(autoClose);
-        ClientPlayNetworking.send(SlidingPlatforms.PLATFORM_SENSOR, buf);
+        ClientNet.send(SlidingPlatforms.PLATFORM_SENSOR, buf);
     }
 
     @Override
@@ -200,7 +202,7 @@ public class PlatformSensorScreen extends HandledScreen<PlatformSensorScreenHand
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
+        this.renderBackground(ctx, mouseX, mouseY, delta);
         super.render(ctx, mouseX, mouseY, delta);
         int left = this.x, top = this.y;
         ctx.drawCenteredTextWithShadow(this.textRenderer, this.title,

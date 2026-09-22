@@ -1,5 +1,7 @@
 package mc.slidingplatforms;
 
+import mc.slidingplatforms.Net;
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -10,6 +12,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -33,44 +36,44 @@ public class SlidingPlatforms implements ModInitializer {
         if (SlidingPlatformsConfig.VALUES.debugLogs) LOGGER.info("[dbg] " + msg, args);
     }
 
-    public static final Identifier GUI_APPLY = new Identifier(MOD_ID, "gui_apply");
-    public static final Identifier GUI_MANUAL = new Identifier(MOD_ID, "gui_manual");
-    public static final Identifier SWITCH_TOGGLE = new Identifier(MOD_ID, "switch_toggle");
-    public static final Identifier SELECTION_SYNC = new Identifier(MOD_ID, "selection_sync");
-    public static final Identifier BOX_SELECT = new Identifier(MOD_ID, "box_select");
-    public static final Identifier GUI_SCREENS = new Identifier(MOD_ID, "gui_screens");
-    public static final Identifier BIND_SCREEN = new Identifier(MOD_ID, "bind_screen");
-    public static final Identifier RIDE_TO = new Identifier(MOD_ID, "ride_to");
-    public static final Identifier SCREEN_NAME = new Identifier(MOD_ID, "screen_name");
-    public static final Identifier SCREEN_FLOOR_NUM = new Identifier(MOD_ID, "screen_floor_num");
-    public static final Identifier SCREEN_FLOOR_DEL = new Identifier(MOD_ID, "screen_floor_del");
-    public static final Identifier CHAIN_RENAME = new Identifier(MOD_ID, "chain_rename");
-    public static final Identifier SCREEN_CALL = new Identifier(MOD_ID, "screen_call");
-    public static final Identifier CHAIN_LINK = new Identifier(MOD_ID, "chain_link");
-    public static final Identifier PLATFORM_SOUNDS_GUI = new Identifier(MOD_ID, "platform_sounds_gui");
-    public static final Identifier PLATFORM_SOUNDS = new Identifier(MOD_ID, "platform_sounds");
-    public static final Identifier PLATFORM_MAIN_GUI = new Identifier(MOD_ID, "platform_main_gui");
-    public static final Identifier PLATFORM_SENSOR_GUI = new Identifier(MOD_ID, "platform_sensor_gui");
-    public static final Identifier PLATFORM_SENSOR = new Identifier(MOD_ID, "platform_sensor");
-    public static final Identifier GUI_SENSOR_ZONE = new Identifier(MOD_ID, "gui_sensor_zone");
-    public static final Identifier ZONE_SELECT = new Identifier(MOD_ID, "zone_select");
-    public static final Identifier ZONE_CLEAR = new Identifier(MOD_ID, "zone_clear");
-    public static final Identifier ZONE_SYNC = new Identifier(MOD_ID, "zone_sync");
-    public static final Identifier PLATFORM_LOCK_GUI = new Identifier(MOD_ID, "platform_lock_gui");
-    public static final Identifier PLATFORM_LOCK_SET = new Identifier(MOD_ID, "platform_lock_set");
-    public static final Identifier PLATFORM_CASCADE_GUI = new Identifier(MOD_ID, "platform_cascade_gui");
-    public static final Identifier PLATFORM_CASCADE_SET = new Identifier(MOD_ID, "platform_cascade_set");
-    public static final Identifier CFG_SET = new Identifier(MOD_ID, "cfg_set");
-    public static final Identifier CFG_SYNC = new Identifier(MOD_ID, "cfg_sync");
-    public static final Identifier RELOAD = new Identifier(MOD_ID, "reload");
-    public static final Identifier SOUND_HELLO = new Identifier(MOD_ID, "sound_hello");
-    public static final Identifier SOUND_LIST = new Identifier(MOD_ID, "sound_list");
-    public static final Identifier SOUND_UP_BEGIN = new Identifier(MOD_ID, "sound_up_begin");
-    public static final Identifier SOUND_UP_CHUNK = new Identifier(MOD_ID, "sound_up_chunk");
-    public static final Identifier SOUND_ACK = new Identifier(MOD_ID, "sound_ack");
-    public static final Identifier CLIENT_LANG = new Identifier(MOD_ID, "client_lang");
-    public static final Identifier SOUND_PACK_BEGIN = new Identifier(MOD_ID, "sound_pack_begin");
-    public static final Identifier SOUND_PACK_CHUNK = new Identifier(MOD_ID, "sound_pack_chunk");
+    public static final Identifier GUI_APPLY = Identifier.of(MOD_ID, "gui_apply");
+    public static final Identifier GUI_MANUAL = Identifier.of(MOD_ID, "gui_manual");
+    public static final Identifier SWITCH_TOGGLE = Identifier.of(MOD_ID, "switch_toggle");
+    public static final Identifier SELECTION_SYNC = Identifier.of(MOD_ID, "selection_sync");
+    public static final Identifier BOX_SELECT = Identifier.of(MOD_ID, "box_select");
+    public static final Identifier GUI_SCREENS = Identifier.of(MOD_ID, "gui_screens");
+    public static final Identifier BIND_SCREEN = Identifier.of(MOD_ID, "bind_screen");
+    public static final Identifier RIDE_TO = Identifier.of(MOD_ID, "ride_to");
+    public static final Identifier SCREEN_NAME = Identifier.of(MOD_ID, "screen_name");
+    public static final Identifier SCREEN_FLOOR_NUM = Identifier.of(MOD_ID, "screen_floor_num");
+    public static final Identifier SCREEN_FLOOR_DEL = Identifier.of(MOD_ID, "screen_floor_del");
+    public static final Identifier CHAIN_RENAME = Identifier.of(MOD_ID, "chain_rename");
+    public static final Identifier SCREEN_CALL = Identifier.of(MOD_ID, "screen_call");
+    public static final Identifier CHAIN_LINK = Identifier.of(MOD_ID, "chain_link");
+    public static final Identifier PLATFORM_SOUNDS_GUI = Identifier.of(MOD_ID, "platform_sounds_gui");
+    public static final Identifier PLATFORM_SOUNDS = Identifier.of(MOD_ID, "platform_sounds");
+    public static final Identifier PLATFORM_MAIN_GUI = Identifier.of(MOD_ID, "platform_main_gui");
+    public static final Identifier PLATFORM_SENSOR_GUI = Identifier.of(MOD_ID, "platform_sensor_gui");
+    public static final Identifier PLATFORM_SENSOR = Identifier.of(MOD_ID, "platform_sensor");
+    public static final Identifier GUI_SENSOR_ZONE = Identifier.of(MOD_ID, "gui_sensor_zone");
+    public static final Identifier ZONE_SELECT = Identifier.of(MOD_ID, "zone_select");
+    public static final Identifier ZONE_CLEAR = Identifier.of(MOD_ID, "zone_clear");
+    public static final Identifier ZONE_SYNC = Identifier.of(MOD_ID, "zone_sync");
+    public static final Identifier PLATFORM_LOCK_GUI = Identifier.of(MOD_ID, "platform_lock_gui");
+    public static final Identifier PLATFORM_LOCK_SET = Identifier.of(MOD_ID, "platform_lock_set");
+    public static final Identifier PLATFORM_CASCADE_GUI = Identifier.of(MOD_ID, "platform_cascade_gui");
+    public static final Identifier PLATFORM_CASCADE_SET = Identifier.of(MOD_ID, "platform_cascade_set");
+    public static final Identifier CFG_SET = Identifier.of(MOD_ID, "cfg_set");
+    public static final Identifier CFG_SYNC = Identifier.of(MOD_ID, "cfg_sync");
+    public static final Identifier RELOAD = Identifier.of(MOD_ID, "reload");
+    public static final Identifier SOUND_HELLO = Identifier.of(MOD_ID, "sound_hello");
+    public static final Identifier SOUND_LIST = Identifier.of(MOD_ID, "sound_list");
+    public static final Identifier SOUND_UP_BEGIN = Identifier.of(MOD_ID, "sound_up_begin");
+    public static final Identifier SOUND_UP_CHUNK = Identifier.of(MOD_ID, "sound_up_chunk");
+    public static final Identifier SOUND_ACK = Identifier.of(MOD_ID, "sound_ack");
+    public static final Identifier CLIENT_LANG = Identifier.of(MOD_ID, "client_lang");
+    public static final Identifier SOUND_PACK_BEGIN = Identifier.of(MOD_ID, "sound_pack_begin");
+    public static final Identifier SOUND_PACK_CHUNK = Identifier.of(MOD_ID, "sound_pack_chunk");
 
     public static final int GUI_MAX_OFFSET = 64;
 
@@ -78,8 +81,52 @@ public class SlidingPlatforms implements ModInitializer {
 
     private static final Map<UUID, BlockPos> zoneSelecting = new HashMap<>();
 
-    @Override
+    /** Pre-register all network channels so PayloadTypeRegistry is set up at init time. */
+    private static void registerAllChannels() {
+        Net.register(GUI_APPLY);
+        Net.register(GUI_MANUAL);
+        Net.register(SWITCH_TOGGLE);
+        Net.register(SELECTION_SYNC);
+        Net.register(BOX_SELECT);
+        Net.register(GUI_SCREENS);
+        Net.register(BIND_SCREEN);
+        Net.register(RIDE_TO);
+        Net.register(SCREEN_NAME);
+        Net.register(SCREEN_FLOOR_NUM);
+        Net.register(SCREEN_FLOOR_DEL);
+        Net.register(CHAIN_RENAME);
+        Net.register(SCREEN_CALL);
+        Net.register(CHAIN_LINK);
+        Net.register(PLATFORM_SOUNDS_GUI);
+        Net.register(PLATFORM_SOUNDS);
+        Net.register(PLATFORM_MAIN_GUI);
+        Net.register(PLATFORM_SENSOR_GUI);
+        Net.register(PLATFORM_SENSOR);
+        Net.register(GUI_SENSOR_ZONE);
+        Net.register(ZONE_SELECT);
+        Net.register(ZONE_CLEAR);
+        Net.register(ZONE_SYNC);
+        Net.register(PLATFORM_LOCK_GUI);
+        Net.register(PLATFORM_LOCK_SET);
+        Net.register(PLATFORM_CASCADE_GUI);
+        Net.register(PLATFORM_CASCADE_SET);
+        Net.register(CFG_SET);
+        Net.register(CFG_SYNC);
+        Net.register(RELOAD);
+        Net.register(SOUND_HELLO);
+        Net.register(SOUND_LIST);
+        Net.register(SOUND_UP_BEGIN);
+        Net.register(SOUND_UP_CHUNK);
+        Net.register(SOUND_ACK);
+        Net.register(CLIENT_LANG);
+        Net.register(SOUND_PACK_BEGIN);
+        Net.register(SOUND_PACK_CHUNK);
+        Net.register(SlidingPlatformEntity.DATA_PACKET);
+        Net.register(SlidingPlatformEntity.ARRIVE_PACKET);
+    }
+
     public void onInitialize() {
+        registerAllChannels();
         SlidingPlatformsConfig.load();
         ModBlocks.register();
         ModEntities.register();
@@ -98,10 +145,10 @@ public class SlidingPlatforms implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeString(SlidingPlatformsConfig.toJson());
-            ServerPlayNetworking.send(handler.player, CFG_SYNC, buf);
+            Net.send(handler.player, CFG_SYNC, buf);
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(CFG_SET, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(CFG_SET, (player, buf) -> { MinecraftServer server = player.getServer();
             String json = buf.readString();
             server.execute(() -> {
                 if (!canEditConfig(player, server)) return;
@@ -112,7 +159,7 @@ public class SlidingPlatforms implements ModInitializer {
                 PacketByteBuf out = PacketByteBufs.create();
                 out.writeString(SlidingPlatformsConfig.toJson());
                 for (ServerPlayerEntity p : server.getPlayerManager().getPlayerList()) {
-                    ServerPlayNetworking.send(p, CFG_SYNC, new PacketByteBuf(out.copy()));
+                    Net.send(p, CFG_SYNC, new PacketByteBuf(out.copy()));
                 }
             });
         });
@@ -148,7 +195,7 @@ public class SlidingPlatforms implements ModInitializer {
             buf.writeBlockPos(min);
             buf.writeBlockPos(max);
         }
-        ServerPlayNetworking.send(spe, ZONE_SYNC, buf);
+        Net.send(spe, ZONE_SYNC, buf);
     }
 
     public static void sendSelectionSync(PlayerEntity player, BlockPos controllerPos,
@@ -158,12 +205,12 @@ public class SlidingPlatforms implements ModInitializer {
         buf.writeBoolean(controllerPos != null);
         buf.writeVarInt(blocks.size());
         for (BlockPos p : blocks) buf.writeBlockPos(p);
-        ServerPlayNetworking.send(spe, SELECTION_SYNC, buf);
+        Net.send(spe, SELECTION_SYNC, buf);
     }
 
     private void registerNetworking() {
 
-        ServerPlayNetworking.registerGlobalReceiver(GUI_APPLY, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(GUI_APPLY, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             int axisId = buf.readByte();
             boolean positive = buf.readBoolean();
@@ -191,7 +238,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(BOX_SELECT, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(BOX_SELECT, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos a = buf.readBlockPos();
             BlockPos b = buf.readBlockPos();
             server.execute(() -> {
@@ -220,7 +267,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(GUI_MANUAL, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(GUI_MANUAL, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
                 if (!pos.isWithinDistance(player.getBlockPos(), 8)) return;
@@ -236,7 +283,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(GUI_SCREENS, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(GUI_SCREENS, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
                 if (!pos.isWithinDistance(player.getBlockPos(), 8)) return;
@@ -245,7 +292,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(PLATFORM_SOUNDS_GUI, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(PLATFORM_SOUNDS_GUI, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
                 if (!pos.isWithinDistance(player.getBlockPos(), 8)) return;
@@ -255,7 +302,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(PLATFORM_SOUNDS, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(PLATFORM_SOUNDS, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             boolean enabled = buf.readBoolean();
             String start = buf.readString(48);
@@ -271,7 +318,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(PLATFORM_MAIN_GUI, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(PLATFORM_MAIN_GUI, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
                 if (!pos.isWithinDistance(player.getBlockPos(), 8)) return;
@@ -282,7 +329,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(PLATFORM_SENSOR_GUI, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(PLATFORM_SENSOR_GUI, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
                 if (!pos.isWithinDistance(player.getBlockPos(), 8)) return;
@@ -292,7 +339,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(PLATFORM_SENSOR, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(PLATFORM_SENSOR, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             boolean on = buf.readBoolean();
             int radius = buf.readVarInt();
@@ -310,7 +357,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(PLATFORM_LOCK_GUI, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(PLATFORM_LOCK_GUI, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
                 if (!pos.isWithinDistance(player.getBlockPos(), 8)) return;
@@ -319,7 +366,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(PLATFORM_LOCK_SET, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(PLATFORM_LOCK_SET, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             boolean on = buf.readBoolean();
             String owner = buf.readString(24);
@@ -348,7 +395,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(PLATFORM_CASCADE_GUI, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(PLATFORM_CASCADE_GUI, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
                 if (!pos.isWithinDistance(player.getBlockPos(), 8)) return;
@@ -358,7 +405,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(PLATFORM_CASCADE_SET, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(PLATFORM_CASCADE_SET, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             boolean on = buf.readBoolean();
             int delay = buf.readVarInt();
@@ -373,7 +420,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(GUI_SENSOR_ZONE, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(GUI_SENSOR_ZONE, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
                 if (!pos.isWithinDistance(player.getBlockPos(), 8)) return;
@@ -386,7 +433,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(ZONE_SELECT, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(ZONE_SELECT, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos ctrlPos = buf.readBlockPos();
             BlockPos a = buf.readBlockPos();
             BlockPos b = buf.readBlockPos();
@@ -412,7 +459,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(ZONE_CLEAR, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(ZONE_CLEAR, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
                 if (!pos.isWithinDistance(player.getBlockPos(), 8)) return;
@@ -423,7 +470,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(BIND_SCREEN, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(BIND_SCREEN, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos controllerPos = buf.readBlockPos();
             String key = buf.readString(64);
             server.execute(() -> {
@@ -435,7 +482,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(RIDE_TO, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(RIDE_TO, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos screenPos = buf.readBlockPos();
             BlockPos targetCtrl = buf.readBlockPos();
             server.execute(() -> {
@@ -446,7 +493,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(SCREEN_NAME, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(SCREEN_NAME, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos screenPos = buf.readBlockPos();
             String name = buf.readString(24);
             server.execute(() -> {
@@ -457,7 +504,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(SCREEN_FLOOR_NUM, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(SCREEN_FLOOR_NUM, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos screenPos = buf.readBlockPos();
             BlockPos ctrlPos = buf.readBlockPos();
             int num = buf.readVarInt();
@@ -469,7 +516,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(SCREEN_FLOOR_DEL, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(SCREEN_FLOOR_DEL, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos screenPos = buf.readBlockPos();
             BlockPos ctrlPos = buf.readBlockPos();
             server.execute(() -> {
@@ -484,7 +531,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(CHAIN_RENAME, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(CHAIN_RENAME, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos screenPos = buf.readBlockPos();
             String name = buf.readString(24);
             server.execute(() -> {
@@ -497,7 +544,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(SCREEN_CALL, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(SCREEN_CALL, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos screenPos = buf.readBlockPos();
             int num = buf.readVarInt();
             server.execute(() -> {
@@ -514,7 +561,7 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(CHAIN_LINK, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(CHAIN_LINK, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos screenPos = buf.readBlockPos();
             String target = buf.readString(64);
             server.execute(() -> {
@@ -536,28 +583,28 @@ public class SlidingPlatforms implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(CLIENT_LANG, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(CLIENT_LANG, (player, buf) -> { MinecraftServer server = player.getServer();
             String lang = buf.readString(8);
             server.execute(() -> ClientLanguages.put(player.getUuid(), lang));
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(SOUND_HELLO, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(SOUND_HELLO, (player, buf) -> { MinecraftServer server = player.getServer();
             String host = buf.readString(255);
             server.execute(() -> SoundPackService.onHello(player, host));
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(SOUND_UP_BEGIN, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(SOUND_UP_BEGIN, (player, buf) -> { MinecraftServer server = player.getServer();
             String base = buf.readString(80);
             int size = buf.readInt();
             String sha = buf.readString(40);
             server.execute(() -> SoundPackService.onUploadBegin(player, base, size, sha));
         });
-        ServerPlayNetworking.registerGlobalReceiver(SOUND_UP_CHUNK, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(SOUND_UP_CHUNK, (player, buf) -> { MinecraftServer server = player.getServer();
             byte[] chunk = buf.readByteArray(8200);
             server.execute(() -> SoundPackService.onUploadChunk(player, chunk));
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(SWITCH_TOGGLE, (server, player, handler, buf, sender) -> {
+        Net.registerServerReceiver(SWITCH_TOGGLE, (player, buf) -> { MinecraftServer server = player.getServer();
             BlockPos switchPos = buf.readBlockPos();
             BlockPos controllerPos = buf.readBlockPos();
             server.execute(() -> {
@@ -570,9 +617,10 @@ public class SlidingPlatforms implements ModInitializer {
     }
 
     public static void openSoundsMenu(PlayerEntity player, BlockPos ctrlPos) {
-        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory<net.minecraft.network.PacketByteBuf>() {
             @Override
-            public void writeScreenOpeningData(ServerPlayerEntity p, PacketByteBuf buf) {
+            public net.minecraft.network.PacketByteBuf getScreenOpeningData(ServerPlayerEntity p) {
+                net.minecraft.network.PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
                 buf.writeBlockPos(ctrlPos);
                 boolean en = true;
                 String s1 = "", s2 = "", s3 = "", s4 = "";
@@ -588,6 +636,7 @@ public class SlidingPlatforms implements ModInitializer {
                 buf.writeString(s2);
                 buf.writeString(s3);
                 buf.writeString(s4);
+                return buf;
             }
 
             @Override
@@ -605,9 +654,10 @@ public class SlidingPlatforms implements ModInitializer {
     }
 
     public static void openSensorMenu(PlayerEntity player, BlockPos ctrlPos) {
-        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory<net.minecraft.network.PacketByteBuf>() {
             @Override
-            public void writeScreenOpeningData(ServerPlayerEntity p, PacketByteBuf buf) {
+            public net.minecraft.network.PacketByteBuf getScreenOpeningData(ServerPlayerEntity p) {
+                net.minecraft.network.PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
                 buf.writeBlockPos(ctrlPos);
                 boolean on = false, players = true, mobs = true, invert = false;
                 int radius = 3;
@@ -633,6 +683,7 @@ public class SlidingPlatforms implements ModInitializer {
                 buf.writeVarInt(zone[1]);
                 buf.writeVarInt(zone[2]);
                 buf.writeVarInt(autoClose);
+                return buf;
             }
 
             @Override
@@ -650,9 +701,10 @@ public class SlidingPlatforms implements ModInitializer {
     }
 
     public static void openLockMenu(PlayerEntity player, BlockPos ctrlPos) {
-        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory<net.minecraft.network.PacketByteBuf>() {
             @Override
-            public void writeScreenOpeningData(ServerPlayerEntity p, PacketByteBuf buf) {
+            public net.minecraft.network.PacketByteBuf getScreenOpeningData(ServerPlayerEntity p) {
+                net.minecraft.network.PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
                 buf.writeBlockPos(ctrlPos);
                 boolean on = false;
                 String owner = "", trusted = "";
@@ -664,6 +716,7 @@ public class SlidingPlatforms implements ModInitializer {
                 buf.writeBoolean(on);
                 buf.writeString(owner);
                 buf.writeString(trusted);
+                return buf;
             }
 
             @Override
@@ -681,9 +734,10 @@ public class SlidingPlatforms implements ModInitializer {
     }
 
     public static void openCascadeMenu(PlayerEntity player, BlockPos ctrlPos) {
-        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory<net.minecraft.network.PacketByteBuf>() {
             @Override
-            public void writeScreenOpeningData(ServerPlayerEntity p, PacketByteBuf buf) {
+            public net.minecraft.network.PacketByteBuf getScreenOpeningData(ServerPlayerEntity p) {
+                net.minecraft.network.PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
                 buf.writeBlockPos(ctrlPos);
                 boolean on = false;
                 int delay = 2;
@@ -696,6 +750,7 @@ public class SlidingPlatforms implements ModInitializer {
                 buf.writeBoolean(on);
                 buf.writeVarInt(delay);
                 buf.writeBoolean(invert);
+                return buf;
             }
 
             @Override
@@ -720,10 +775,12 @@ public class SlidingPlatforms implements ModInitializer {
     }
 
     public static void openConfigMenu(ServerPlayerEntity player) {
-        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory<net.minecraft.network.PacketByteBuf>() {
             @Override
-            public void writeScreenOpeningData(ServerPlayerEntity p, PacketByteBuf buf) {
+            public net.minecraft.network.PacketByteBuf getScreenOpeningData(ServerPlayerEntity p) {
+                net.minecraft.network.PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
                 buf.writeString(SlidingPlatformsConfig.toJson());
+                return buf;
             }
 
             @Override
@@ -741,9 +798,10 @@ public class SlidingPlatforms implements ModInitializer {
     }
 
     public static void openFloorsMenu(PlayerEntity player, ElevatorScreenBlockEntity screen) {
-        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory<net.minecraft.network.PacketByteBuf>() {
             @Override
-            public void writeScreenOpeningData(ServerPlayerEntity p, PacketByteBuf buf) {
+            public net.minecraft.network.PacketByteBuf getScreenOpeningData(ServerPlayerEntity p) {
+                net.minecraft.network.PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
                 buf.writeBlockPos(screen.getPos());
                 java.util.List<ElevatorScreenBlockEntity.Floor> fs = screen.floors();
                 buf.writeVarInt(fs.size());
@@ -756,6 +814,7 @@ public class SlidingPlatforms implements ModInitializer {
                             && c.isCabinPresent();
                     buf.writeBoolean(cabin);
                 }
+                return buf;
             }
 
             @Override
@@ -778,9 +837,10 @@ public class SlidingPlatforms implements ModInitializer {
 
     public static void openScreenSettings(PlayerEntity player, ElevatorScreenBlockEntity screen,
                                           boolean chainTab) {
-        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory<net.minecraft.network.PacketByteBuf>() {
             @Override
-            public void writeScreenOpeningData(ServerPlayerEntity p, PacketByteBuf buf) {
+            public net.minecraft.network.PacketByteBuf getScreenOpeningData(ServerPlayerEntity p) {
+                net.minecraft.network.PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
                 net.minecraft.world.World world = screen.getWorld();
                 String selfPosKey = Long.toString(screen.getPos().asLong());
                 String selfChain = screen.getChain();
@@ -815,6 +875,7 @@ public class SlidingPlatforms implements ModInitializer {
                 }
                 buf.writeBoolean(chainTab);
                 buf.writeVarInt(screen.getCallFloor());
+                return buf;
             }
 
             @Override
@@ -834,9 +895,10 @@ public class SlidingPlatforms implements ModInitializer {
 
     private static void openScreenBindMenu(ServerPlayerEntity player, BlockPos controllerPos) {
         net.minecraft.world.World world = player.getWorld();
-        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory<net.minecraft.network.PacketByteBuf>() {
             @Override
-            public void writeScreenOpeningData(ServerPlayerEntity p, PacketByteBuf buf) {
+            public net.minecraft.network.PacketByteBuf getScreenOpeningData(ServerPlayerEntity p) {
+                net.minecraft.network.PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
                 buf.writeBlockPos(controllerPos);
                 java.util.List<ScreenSelectScreenHandler.ScreenRow> rows = new java.util.ArrayList<>();
                 for (ChainRegistry.Entry c : ChainRegistry.list(world)) {
@@ -852,6 +914,7 @@ public class SlidingPlatforms implements ModInitializer {
                     buf.writeString(r.key());
                     buf.writeString(r.name());
                 }
+                return buf;
             }
 
             @Override

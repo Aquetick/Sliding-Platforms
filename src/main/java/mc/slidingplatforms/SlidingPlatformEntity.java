@@ -1,5 +1,7 @@
 package mc.slidingplatforms;
 
+import mc.slidingplatforms.Net;
+
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -12,7 +14,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -28,9 +29,9 @@ import java.util.List;
 
 public class SlidingPlatformEntity extends Entity {
 
-    public static final Identifier DATA_PACKET = new Identifier(SlidingPlatforms.MOD_ID, "platform_render_data");
+    public static final Identifier DATA_PACKET = Identifier.of(SlidingPlatforms.MOD_ID, "platform_render_data");
 
-    public static final Identifier ARRIVE_PACKET = new Identifier(SlidingPlatforms.MOD_ID, "platform_arrive");
+    public static final Identifier ARRIVE_PACKET = Identifier.of(SlidingPlatforms.MOD_ID, "platform_arrive");
 
     public record RenderBlock(int x, int y, int z, BlockState state) {}
 
@@ -263,7 +264,7 @@ public class SlidingPlatformEntity extends Entity {
             if (be != null) {
                 NbtCompound nbt = entry.getCompound("nbt").copy();
                 nbt.remove("x"); nbt.remove("y"); nbt.remove("z");
-                be.readNbt(nbt);
+                applyNbtToBE(be, nbt, world.getRegistryManager());
                 be.markDirty();
             }
         }
@@ -417,9 +418,8 @@ public class SlidingPlatformEntity extends Entity {
     }
 
     @Override
-    public Packet<ClientPlayPacketListener> createSpawnPacket() {
-
-        return new EntitySpawnS2CPacket(this);
+    public Packet<ClientPlayPacketListener> createSpawnPacket(net.minecraft.server.network.EntityTrackerEntry entry) {
+        return super.createSpawnPacket(entry);
     }
 
     private void broadcastRenderData() {
@@ -436,7 +436,7 @@ public class SlidingPlatformEntity extends Entity {
         buf.writeLong(at.asLong());
         buf.writeBoolean(loud);
         for (ServerPlayerEntity player : PlayerLookup.tracking(this)) {
-            ServerPlayNetworking.send(player, ARRIVE_PACKET, buf);
+            Net.send(player, ARRIVE_PACKET, buf);
         }
     }
 
@@ -460,7 +460,7 @@ public class SlidingPlatformEntity extends Entity {
         out.putString("sndHum", sndHum);
         buf.writeVarInt(getId());
         buf.writeNbt(out);
-        ServerPlayNetworking.send(player, DATA_PACKET, buf);
+        Net.send(player, DATA_PACKET, buf);
     }
 
     private void resendIfNeeded() {
@@ -568,7 +568,26 @@ public class SlidingPlatformEntity extends Entity {
     }
 
     @Override
-    protected void initDataTracker() {
+    protected void initDataTracker(net.minecraft.entity.data.DataTracker.Builder builder) {
 
     }
+
+    @SuppressWarnings("deprecation")
+    private static void applyNbtToBE(net.minecraft.block.entity.BlockEntity be,
+                                     NbtCompound nbt,
+                                     net.minecraft.registry.RegistryWrapper.WrapperLookup reg) {
+        // BlockEntity.readNbt is protected in 1.21.1; we call it via the public
+        // BlockEntityType helper which is the intended migration path.
+        try {
+            java.lang.reflect.Method m = net.minecraft.block.entity.BlockEntity.class
+                    .getDeclaredMethod("readNbt",
+                            NbtCompound.class,
+                            net.minecraft.registry.RegistryWrapper.WrapperLookup.class);
+            m.setAccessible(true);
+            m.invoke(be, nbt, reg);
+        } catch (Exception e) {
+            SlidingPlatforms.LOGGER.warn("applyNbtToBE failed: {}", e.getMessage());
+        }
+    }
+
 }

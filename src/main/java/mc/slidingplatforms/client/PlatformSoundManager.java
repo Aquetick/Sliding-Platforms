@@ -22,7 +22,7 @@ import java.util.Map;
 
 public final class PlatformSoundManager {
 
-    public static final Identifier HUM = new Identifier(SlidingPlatforms.MOD_ID, "platform_hum");
+    public static final Identifier HUM = Identifier.of(SlidingPlatforms.MOD_ID, "platform_hum");
 
     public static final String DEFAULT_START = "minecraft:block.piston.extend";
     public static final String DEFAULT_STOP = "minecraft:block.piston.contract";
@@ -76,7 +76,7 @@ public final class PlatformSoundManager {
             boolean finishedNaturally = seen.contains(platform.getId()) && !platform.isRemoved()
                     && !platform.isTravellingNow();
             if (platform.isRemoved() || !seen.contains(platform.getId()) || finishedNaturally) {
-                hum.stop();
+                hum.requestStop();
                 it.remove();
                 if (finishedNaturally && platform.hasTailSound()) {
                     playOnce(resolve(platform.getSndStop(), DEFAULT_STOP), VOL_STOP,
@@ -102,7 +102,7 @@ public final class PlatformSoundManager {
 
     public static void onPlatformArrived(int entityId, BlockPos at, boolean loud) {
         PlatformHumSound hum = hums.remove(entityId);
-        if (hum != null) hum.stop();
+        if (hum != null) hum.requestStop();
         SlidingPlatformEntity platform;
         if (hum != null) {
             platform = hum.platform;
@@ -123,7 +123,7 @@ public final class PlatformSoundManager {
     }
 
     public static void clear() {
-        for (PlatformHumSound hum : hums.values()) hum.stop();
+        for (PlatformHumSound hum : hums.values()) hum.requestStop();
         hums.clear();
         pending.clear();
         known.clear();
@@ -168,7 +168,7 @@ public final class PlatformSoundManager {
             this.z = (float) platform.getZ();
         }
 
-        void stop() {
+        void requestStop() {
             setDone();
         }
     }

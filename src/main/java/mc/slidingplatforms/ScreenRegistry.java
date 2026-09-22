@@ -30,10 +30,10 @@ public class ScreenRegistry extends PersistentState {
 
     private static ScreenRegistry state(ServerWorld world) {
         return world.getServer().getOverworld().getPersistentStateManager().getOrCreate(
-                ScreenRegistry::fromNbt, ScreenRegistry::new, STATE_ID);
+                new PersistentState.Type<>(ScreenRegistry::new, ScreenRegistry::fromNbt, null), STATE_ID);
     }
 
-    public static ScreenRegistry fromNbt(NbtCompound nbt) {
+    public static ScreenRegistry fromNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
         ScreenRegistry r = new ScreenRegistry();
         MAP.clear();
         NbtList list = nbt.getList("screens", NbtElement.COMPOUND_TYPE);
@@ -41,7 +41,7 @@ public class ScreenRegistry extends PersistentState {
             NbtCompound e = list.getCompound(i);
             try {
                 RegistryKey<World> dim = RegistryKey.of(net.minecraft.registry.RegistryKeys.WORLD,
-                        new Identifier(e.getString("dim")));
+                        Identifier.of(e.getString("dim")));
                 BlockPos pos = BlockPos.fromLong(e.getLong("pos"));
                 MAP.computeIfAbsent(dim, k -> new HashMap<>()).put(pos, e.getString("name"));
             } catch (Exception ignored) {  }
@@ -50,7 +50,7 @@ public class ScreenRegistry extends PersistentState {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
         NbtList list = new NbtList();
         synchronized (ScreenRegistry.class) {
             MAP.forEach((dim, m) -> m.forEach((pos, name) -> {

@@ -1,5 +1,7 @@
 package mc.slidingplatforms;
 
+import mc.slidingplatforms.Net;
+
 import com.sun.net.httpserver.HttpServer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -8,7 +10,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.ResourcePackSendS2CPacket;
+import net.minecraft.network.packet.s2c.common.ResourcePackSendS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -211,8 +213,8 @@ public final class SoundPackService {
         if (!enabled() || packBytes == null || player.networkHandler == null) return;
         String url = packUrl(hellos.get(player.getUuid()));
         if (url == null) return;
-        player.networkHandler.sendPacket(new ResourcePackSendS2CPacket(url, packSha1, false,
-                Text.translatable("message.slidingplatforms.soundpack_prompt")));
+        player.networkHandler.sendPacket(new ResourcePackSendS2CPacket(java.util.UUID.randomUUID(), url, packSha1, false,
+                java.util.Optional.of(Text.translatable("message.slidingplatforms.soundpack_prompt"))));
     }
 
     public static void onHello(ServerPlayerEntity player, String host) {
@@ -341,7 +343,7 @@ public final class SoundPackService {
             buf.writeString(base, 80);
             buf.writeString(h, 8);
         });
-        ServerPlayNetworking.send(player, SlidingPlatforms.SOUND_LIST, buf);
+        Net.send(player, SlidingPlatforms.SOUND_LIST, buf);
     }
 
     private static void broadcastSoundList() {
@@ -436,7 +438,7 @@ public final class SoundPackService {
         buf.writeString(origBase, 80);
         buf.writeString(finalBase == null ? "" : finalBase, 80);
         buf.writeBoolean(ok);
-        ServerPlayNetworking.send(player, SlidingPlatforms.SOUND_ACK, buf);
+        Net.send(player, SlidingPlatforms.SOUND_ACK, buf);
     }
 
     public static void onPackDownloadFailed(ServerPlayerEntity player) {
@@ -463,7 +465,7 @@ public final class SoundPackService {
             PacketByteBuf begin = PacketByteBufs.create();
             begin.writeVarInt(data.length);
             begin.writeString(sha, 40);
-            ServerPlayNetworking.send(p, SlidingPlatforms.SOUND_PACK_BEGIN, begin);
+            Net.send(p, SlidingPlatforms.SOUND_PACK_BEGIN, begin);
             LOG.info("HTTP-закачка звукового пака у {} сорвалась — довозим чанками ({} байт)",
                     p.getName().getString(), data.length);
         });
@@ -483,7 +485,7 @@ public final class SoundPackService {
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeVarInt(len);
                 buf.writeBytes(st.data, st.off, len);
-                ServerPlayNetworking.send(p, SlidingPlatforms.SOUND_PACK_CHUNK, buf);
+                Net.send(p, SlidingPlatforms.SOUND_PACK_CHUNK, buf);
                 st.off += len;
                 sent++;
             }

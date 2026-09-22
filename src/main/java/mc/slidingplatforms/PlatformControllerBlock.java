@@ -87,12 +87,12 @@ public class PlatformControllerBlock extends Block implements BlockEntityProvide
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos,
-                              PlayerEntity player, Hand hand, BlockHitResult hit) {
+                              PlayerEntity player, BlockHitResult hit) {
         if (!(world.getBlockEntity(pos) instanceof PlatformControllerBlockEntity be)) {
             return ActionResult.PASS;
         }
         if (world.isClient) {
-            return ActionResult.success(true);
+            return ActionResult.SUCCESS;
         }
 
         boolean emptyMain = player.getMainHandStack().isEmpty();

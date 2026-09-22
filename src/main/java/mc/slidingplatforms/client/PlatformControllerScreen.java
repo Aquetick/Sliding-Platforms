@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.PlatformControllerScreenHandler;
 import mc.slidingplatforms.SlidingPlatforms;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -94,7 +96,7 @@ public class PlatformControllerScreen extends HandledScreen<PlatformControllerSc
                 Text.translatable("gui.slidingplatforms.manual"), b -> {
                     PacketByteBuf buf = PacketByteBufs.create();
                     buf.writeBlockPos(handler.pos);
-                    ClientPlayNetworking.send(SlidingPlatforms.GUI_MANUAL, buf);
+                    ClientNet.send(SlidingPlatforms.GUI_MANUAL, buf);
                     this.close();
                 }).dimensions(left + 8, top + 130, 160, 18).build());
 
@@ -105,7 +107,7 @@ public class PlatformControllerScreen extends HandledScreen<PlatformControllerSc
                 b -> {
                     PacketByteBuf buf = PacketByteBufs.create();
                     buf.writeBlockPos(handler.pos);
-                    ClientPlayNetworking.send(SlidingPlatforms.GUI_SCREENS, buf);
+                    ClientNet.send(SlidingPlatforms.GUI_SCREENS, buf);
 
                 }).dimensions(left + 8, top + 152, 160, 18).build());
 
@@ -195,7 +197,7 @@ public class PlatformControllerScreen extends HandledScreen<PlatformControllerSc
         buf.writeString(name, 24);
         buf.writeByte(redstoneMode);
         buf.writeBoolean(lampGlow);
-        ClientPlayNetworking.send(SlidingPlatforms.GUI_APPLY, buf);
+        ClientNet.send(SlidingPlatforms.GUI_APPLY, buf);
     }
 
     @Override
@@ -216,7 +218,7 @@ public class PlatformControllerScreen extends HandledScreen<PlatformControllerSc
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
+        this.renderBackground(ctx, mouseX, mouseY, delta);
         super.render(ctx, mouseX, mouseY, delta);
         ctx.drawCenteredTextWithShadow(this.textRenderer, this.title,
                 this.x + this.backgroundWidth / 2, this.y + 6, 0xFFFFFF);

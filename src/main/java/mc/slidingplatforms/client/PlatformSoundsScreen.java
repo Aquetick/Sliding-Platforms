@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.PlatformControllerBlockEntity;
 import mc.slidingplatforms.PlatformSoundsScreenHandler;
 import mc.slidingplatforms.SlidingPlatforms;
@@ -128,7 +130,7 @@ public class PlatformSoundsScreen extends HandledScreen<PlatformSoundsScreenHand
         buf.writeString(sndStop, 48);
         buf.writeString(sndArrive, 48);
         buf.writeString(sndHum, 48);
-        ClientPlayNetworking.send(SlidingPlatforms.PLATFORM_SOUNDS, buf);
+        ClientNet.send(SlidingPlatforms.PLATFORM_SOUNDS, buf);
     }
 
     private void preview(String kind) {
@@ -210,7 +212,7 @@ public class PlatformSoundsScreen extends HandledScreen<PlatformSoundsScreenHand
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
+        this.renderBackground(ctx, mouseX, mouseY, delta);
         super.render(ctx, mouseX, mouseY, delta);
         int left = this.x, top = this.y;
         ctx.drawCenteredTextWithShadow(this.textRenderer, this.title,

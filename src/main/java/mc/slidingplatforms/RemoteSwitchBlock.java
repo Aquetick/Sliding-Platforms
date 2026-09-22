@@ -32,11 +32,11 @@ public class RemoteSwitchBlock extends Block implements BlockEntityProvider {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos,
-                              PlayerEntity player, Hand hand, BlockHitResult hit) {
+                              PlayerEntity player, BlockHitResult hit) {
         if (!(world.getBlockEntity(pos) instanceof RemoteSwitchBlockEntity be)) {
             return ActionResult.PASS;
         }
-        if (world.isClient) return ActionResult.success(true);
+        if (world.isClient) return ActionResult.SUCCESS;
 
         if (player.isSneaking() && player.getMainHandStack().isEmpty()) {
             player.openHandledScreen(be);

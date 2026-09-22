@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.PlatformCascadeScreenHandler;
 import mc.slidingplatforms.SlidingPlatforms;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -87,7 +89,7 @@ public class PlatformCascadeScreen extends HandledScreen<PlatformCascadeScreenHa
         buf.writeBoolean(on);
         buf.writeVarInt(delay);
         buf.writeBoolean(invert);
-        ClientPlayNetworking.send(SlidingPlatforms.PLATFORM_CASCADE_SET, buf);
+        ClientNet.send(SlidingPlatforms.PLATFORM_CASCADE_SET, buf);
     }
 
     @Override
@@ -108,7 +110,7 @@ public class PlatformCascadeScreen extends HandledScreen<PlatformCascadeScreenHa
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
+        this.renderBackground(ctx, mouseX, mouseY, delta);
         super.render(ctx, mouseX, mouseY, delta);
         int left = this.x, top = this.y;
         ctx.drawCenteredTextWithShadow(this.textRenderer, this.title,

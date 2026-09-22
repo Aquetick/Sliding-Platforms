@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.SlidingPlatforms;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -74,7 +76,7 @@ public class ZoneSelection {
                 buf.writeBlockPos(ctrlPos);
                 buf.writeBlockPos(anchor);
                 buf.writeBlockPos(pos);
-                ClientPlayNetworking.send(SlidingPlatforms.ZONE_SELECT, buf);
+                ClientNet.send(SlidingPlatforms.ZONE_SELECT, buf);
                 anchor = null;
                 player.swingHand(hand);
             }

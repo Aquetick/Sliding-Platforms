@@ -38,10 +38,10 @@ public class ChainRegistry extends PersistentState {
 
     private static ChainRegistry state(ServerWorld world) {
         return world.getServer().getOverworld().getPersistentStateManager().getOrCreate(
-                ChainRegistry::fromNbt, ChainRegistry::new, STATE_ID);
+                new PersistentState.Type<>(ChainRegistry::new, ChainRegistry::fromNbt, null), STATE_ID);
     }
 
-    public static ChainRegistry fromNbt(NbtCompound nbt) {
+    public static ChainRegistry fromNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
         ChainRegistry r = new ChainRegistry();
         MAP.clear();
         NbtList list = nbt.getList("chains", NbtElement.COMPOUND_TYPE);
@@ -49,7 +49,7 @@ public class ChainRegistry extends PersistentState {
             NbtCompound e = list.getCompound(i);
             try {
                 RegistryKey<World> dim = RegistryKey.of(net.minecraft.registry.RegistryKeys.WORLD,
-                        new Identifier(e.getString("dim")));
+                        Identifier.of(e.getString("dim")));
                 Chain c = new Chain();
                 c.name = e.getString("name");
                 NbtList mem = e.getList("members", NbtElement.STRING_TYPE);
@@ -66,7 +66,7 @@ public class ChainRegistry extends PersistentState {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
         NbtList list = new NbtList();
         synchronized (ChainRegistry.class) {
             MAP.forEach((dim, m) -> m.forEach((id, c) -> {

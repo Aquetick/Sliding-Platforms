@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import com.google.gson.Gson;
 import mc.slidingplatforms.ConfigScreenHandler;
 import mc.slidingplatforms.SlidingPlatforms;
@@ -238,7 +240,7 @@ public class ModConfigScreen extends HandledScreen<ConfigScreenHandler> {
     private void sendNow() {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeString(GSON.toJson(cfg));
-        ClientPlayNetworking.send(SlidingPlatforms.CFG_SET, buf);
+        ClientNet.send(SlidingPlatforms.CFG_SET, buf);
     }
 
     @Override
@@ -258,7 +260,7 @@ public class ModConfigScreen extends HandledScreen<ConfigScreenHandler> {
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
+        this.renderBackground(ctx, mouseX, mouseY, delta);
         super.render(ctx, mouseX, mouseY, delta);
         int l = this.x, t = this.y;
         ctx.drawCenteredTextWithShadow(this.textRenderer, this.title,

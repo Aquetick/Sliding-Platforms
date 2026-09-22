@@ -1,7 +1,5 @@
 package mc.slidingplatforms;
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
@@ -14,12 +12,11 @@ public class ModEntities {
 
     public static void register() {
         SLIDING_PLATFORM = Registry.register(Registries.ENTITY_TYPE,
-                new Identifier(SlidingPlatforms.MOD_ID, "sliding_platform"),
-                FabricEntityTypeBuilder.create(SpawnGroup.MISC, SlidingPlatformEntity::new)
-                        .dimensions(EntityDimensions.fixed(0.6f, 0.6f))
-
-                        .trackRangeBlocks(128)
-                        .trackedUpdateRate(1)
+                Identifier.of(SlidingPlatforms.MOD_ID, "sliding_platform"),
+                EntityType.Builder.<SlidingPlatformEntity>create(SlidingPlatformEntity::new, SpawnGroup.MISC)
+                        .dimensions(0.6f, 0.6f)
+                        .maxTrackingRange(128)
+                        .trackingTickInterval(1)
                         .build());
     }
 }

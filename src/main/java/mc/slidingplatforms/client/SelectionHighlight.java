@@ -143,10 +143,10 @@ public final class SelectionHighlight {
     private static void line(VertexConsumer vc, MatrixStack.Entry entry, Matrix4f mat,
                              double x1, double y1, double z1, double x2, double y2, double z2) {
         float nx = (float) (x2 - x1), ny = (float) (y2 - y1), nz = (float) (z2 - z1);
-        vc.vertex(mat, (float) x1, (float) y1, (float) z1)
-                .color(R, G, B, A).normal(entry.getNormalMatrix(), nx, ny, nz).next();
-        vc.vertex(mat, (float) x2, (float) y2, (float) z2)
-                .color(R, G, B, A).normal(entry.getNormalMatrix(), nx, ny, nz).next();
+        vc.vertex(entry, (float) x1, (float) y1, (float) z1)
+                .color(R, G, B, A).normal(entry, nx, ny, nz);
+        vc.vertex(entry, (float) x2, (float) y2, (float) z2)
+                .color(R, G, B, A).normal(entry, nx, ny, nz);
     }
 
     public static void drawBoxOutline(VertexConsumer vc, MatrixStack.Entry entry, Matrix4f mat,
@@ -164,10 +164,10 @@ public final class SelectionHighlight {
         };
         for (double[] e : edges) {
             float nx = (float) (e[3] - e[0]), ny = (float) (e[4] - e[1]), nz = (float) (e[5] - e[2]);
-            vc.vertex(mat, (float) e[0], (float) e[1], (float) e[2])
-                    .color(r, g, b, a).normal(entry.getNormalMatrix(), nx, ny, nz).next();
-            vc.vertex(mat, (float) e[3], (float) e[4], (float) e[5])
-                    .color(r, g, b, a).normal(entry.getNormalMatrix(), nx, ny, nz).next();
+            vc.vertex(entry, (float) e[0], (float) e[1], (float) e[2])
+                    .color(r, g, b, a).normal(entry, nx, ny, nz);
+            vc.vertex(entry, (float) e[3], (float) e[4], (float) e[5])
+                    .color(r, g, b, a).normal(entry, nx, ny, nz);
         }
     }
 }

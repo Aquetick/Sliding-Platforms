@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.SlidingPlatforms;
 import mc.slidingplatforms.SoundFileUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -42,7 +44,7 @@ public final class ServerSounds {
         if (host == null || host.isBlank()) return;
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeString(host, 255);
-        ClientPlayNetworking.send(SlidingPlatforms.SOUND_HELLO, buf);
+        ClientNet.send(SlidingPlatforms.SOUND_HELLO, buf);
     }
 
     public static void onDisconnect() {
@@ -129,12 +131,12 @@ public final class ServerSounds {
                     begin.writeString(base, 80);
                     begin.writeInt(data.length);
                     begin.writeString(sha, 40);
-                    ClientPlayNetworking.send(SlidingPlatforms.SOUND_UP_BEGIN, begin);
+                    ClientNet.send(SlidingPlatforms.SOUND_UP_BEGIN, begin);
                     for (int off = 0; off < data.length; off += 8000) {
                         int len = Math.min(8000, data.length - off);
                         PacketByteBuf chunk = PacketByteBufs.create();
                         chunk.writeByteArray(java.util.Arrays.copyOfRange(data, off, off + len));
-                        ClientPlayNetworking.send(SlidingPlatforms.SOUND_UP_CHUNK, chunk);
+                        ClientNet.send(SlidingPlatforms.SOUND_UP_CHUNK, chunk);
                     }
                 });
             } catch (IOException e) {

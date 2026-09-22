@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.SlidingPlatforms;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -66,7 +68,7 @@ public final class PlatformTabStrip {
         if (tab == active) return;
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBlockPos(pos);
-        ClientPlayNetworking.send(TARGETS[tab], buf);
+        ClientNet.send(TARGETS[tab], buf);
     }
 
     private void refresh() {

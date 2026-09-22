@@ -64,11 +64,11 @@ public class ElevatorScreenBlock extends Block implements BlockEntityProvider {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos,
-                              PlayerEntity player, Hand hand, BlockHitResult hit) {
+                              PlayerEntity player, BlockHitResult hit) {
         if (!(world.getBlockEntity(pos) instanceof ElevatorScreenBlockEntity be)) {
             return ActionResult.PASS;
         }
-        if (world.isClient) return ActionResult.success(true);
+        if (world.isClient) return ActionResult.SUCCESS;
 
         if (player instanceof net.minecraft.server.network.ServerPlayerEntity sp) {
             be.usePlacementWord(ClientLanguages.localizedWord(sp.getUuid(), "Экран", "Screen"));

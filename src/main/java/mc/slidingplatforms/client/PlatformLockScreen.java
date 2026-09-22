@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.PlatformControllerBlockEntity;
 import mc.slidingplatforms.PlatformLockScreenHandler;
 import mc.slidingplatforms.SlidingPlatforms;
@@ -89,7 +91,7 @@ public class PlatformLockScreen extends HandledScreen<PlatformLockScreenHandler>
         buf.writeBoolean(on);
         buf.writeString(owner, 24);
         buf.writeString(trusted, 96);
-        ClientPlayNetworking.send(SlidingPlatforms.PLATFORM_LOCK_SET, buf);
+        ClientNet.send(SlidingPlatforms.PLATFORM_LOCK_SET, buf);
     }
 
     @Override
@@ -110,7 +112,7 @@ public class PlatformLockScreen extends HandledScreen<PlatformLockScreenHandler>
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
+        this.renderBackground(ctx, mouseX, mouseY, delta);
         super.render(ctx, mouseX, mouseY, delta);
         int left = this.x, top = this.y;
         ctx.drawCenteredTextWithShadow(this.textRenderer, this.title,

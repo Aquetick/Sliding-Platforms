@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlatformControllerBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
+public class PlatformControllerBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<PacketByteBuf> {
 
     private static class Scan {
         BlockPos min;
@@ -480,7 +480,7 @@ public class PlatformControllerBlockEntity extends BlockEntity implements Extend
 
     private boolean detectTarget(World world) {
 
-        Box box = zoneMin != null ? new Box(zoneMin, zoneMax) : new Box(pos).expand(sensRadius);
+        Box box = zoneMin != null ? new Box(zoneMin.getX(), zoneMin.getY(), zoneMin.getZ(), zoneMax.getX()+1, zoneMax.getY()+1, zoneMax.getZ()+1) : new Box(pos.getX(), pos.getY(), pos.getZ(), pos.getX()+1, pos.getY()+1, pos.getZ()+1).expand(sensRadius);
         if (sensPlayers) {
             java.util.List<PlayerEntity> players = world.getEntitiesByClass(PlayerEntity.class, box,
                     e -> e.isAlive() && !e.isSpectator() && !e.isInvisible() && matchesWhitelist(e));
@@ -533,7 +533,8 @@ public class PlatformControllerBlockEntity extends BlockEntity implements Extend
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+    public PacketByteBuf getScreenOpeningData(ServerPlayerEntity player) {
+        PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
         buf.writeBlockPos(pos);
         buf.writeByte(getSlideDir().ordinal());
         buf.writeInt(slideOffset);
@@ -543,6 +544,7 @@ public class PlatformControllerBlockEntity extends BlockEntity implements Extend
         buf.writeString(boundScreenName());
         buf.writeByte(redstoneMode);
         buf.writeBoolean(lampGlow);
+        return buf;
     }
 
     public void onRedstoneUpdate(boolean powered) {
@@ -704,7 +706,7 @@ public class PlatformControllerBlockEntity extends BlockEntity implements Extend
                     entry.putInt("rx", xs[i]);
                     entry.putInt("ry", ys[i]);
                     entry.putInt("rz", zs[i]);
-                    entry.put("nbt", be.createNbt());
+                    entry.put("nbt", be.createNbt(world.getRegistryManager()));
                     bed.add(entry);
                 }
             }
@@ -902,7 +904,7 @@ public class PlatformControllerBlockEntity extends BlockEntity implements Extend
                 entry.putInt("rx", xs[i]);
                 entry.putInt("ry", ys[i]);
                 entry.putInt("rz", zs[i]);
-                entry.put("nbt", be.createNbt());
+                entry.put("nbt", be.createNbt(world.getRegistryManager()));
                 beData.add(entry);
             }
         }
@@ -1133,8 +1135,8 @@ public class PlatformControllerBlockEntity extends BlockEntity implements Extend
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
         nbt.putBoolean("open", open);
         nbt.putInt("openDistance", openDistance);
         nbt.putBoolean("wasPowered", wasPowered);
@@ -1189,8 +1191,8 @@ public class PlatformControllerBlockEntity extends BlockEntity implements Extend
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
         open = nbt.getBoolean("open");
         openDistance = nbt.getInt("openDistance");
         wasPowered = nbt.getBoolean("wasPowered");

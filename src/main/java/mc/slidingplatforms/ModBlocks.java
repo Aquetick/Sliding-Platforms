@@ -31,9 +31,9 @@ public class ModBlocks {
     public static BlockEntityType<ElevatorScreenBlockEntity> ELEVATOR_SCREEN_BE;
 
     public static void register() {
-        Identifier controllerId = new Identifier(SlidingPlatforms.MOD_ID, "platform_controller");
-        Identifier switchId = new Identifier(SlidingPlatforms.MOD_ID, "remote_switch");
-        Identifier screenId = new Identifier(SlidingPlatforms.MOD_ID, "elevator_screen");
+        Identifier controllerId = Identifier.of(SlidingPlatforms.MOD_ID, "platform_controller");
+        Identifier switchId = Identifier.of(SlidingPlatforms.MOD_ID, "remote_switch");
+        Identifier screenId = Identifier.of(SlidingPlatforms.MOD_ID, "elevator_screen");
 
         Registry.register(Registries.BLOCK, controllerId, PLATFORM_CONTROLLER);
         Registry.register(Registries.BLOCK, switchId, REMOTE_SWITCH);
@@ -47,13 +47,13 @@ public class ModBlocks {
                 new ElevatorScreenItem(ELEVATOR_SCREEN, new Item.Settings()));
 
         PLATFORM_CONTROLLER_BE = Registry.register(Registries.BLOCK_ENTITY_TYPE, controllerId,
-                BlockEntityType.Builder.create(PlatformControllerBlockEntity::new, PLATFORM_CONTROLLER).build(null));
+                BlockEntityType.Builder.create(PlatformControllerBlockEntity::new, PLATFORM_CONTROLLER).build());
         REMOTE_SWITCH_BE = Registry.register(Registries.BLOCK_ENTITY_TYPE, switchId,
-                BlockEntityType.Builder.create(RemoteSwitchBlockEntity::new, REMOTE_SWITCH).build(null));
+                BlockEntityType.Builder.create(RemoteSwitchBlockEntity::new, REMOTE_SWITCH).build());
         ELEVATOR_SCREEN_BE = Registry.register(Registries.BLOCK_ENTITY_TYPE, screenId,
-                BlockEntityType.Builder.create(ElevatorScreenBlockEntity::new, ELEVATOR_SCREEN).build(null));
+                BlockEntityType.Builder.create(ElevatorScreenBlockEntity::new, ELEVATOR_SCREEN).build());
 
-        Registry.register(Registries.ITEM_GROUP, new Identifier(SlidingPlatforms.MOD_ID, "items"),
+        Registry.register(Registries.ITEM_GROUP, Identifier.of(SlidingPlatforms.MOD_ID, "items"),
                 FabricItemGroup.builder()
                         .displayName(Text.translatable("itemGroup.slidingplatforms.items"))
                         .icon(() -> new ItemStack(PLATFORM_CONTROLLER))

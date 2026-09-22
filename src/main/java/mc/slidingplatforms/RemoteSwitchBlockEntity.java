@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class RemoteSwitchBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
+public class RemoteSwitchBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<PacketByteBuf> {
 
     private final Set<BlockPos> targets = new LinkedHashSet<>();
     private boolean wasPowered = false;
@@ -49,7 +49,8 @@ public class RemoteSwitchBlockEntity extends BlockEntity implements ExtendedScre
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+    public PacketByteBuf getScreenOpeningData(ServerPlayerEntity player) {
+        PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
         buf.writeBlockPos(pos);
 
         buf.writeVarInt(targets.size());
@@ -63,6 +64,7 @@ public class RemoteSwitchBlockEntity extends BlockEntity implements ExtendedScre
             buf.writeBlockPos(e.pos());
             buf.writeString(e.name());
         }
+        return buf;
     }
 
     public void onRedstoneUpdate(boolean powered) {
@@ -100,8 +102,8 @@ public class RemoteSwitchBlockEntity extends BlockEntity implements ExtendedScre
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
         long[] arr = new long[targets.size()];
         int i = 0;
         for (BlockPos t : targets) arr[i++] = t.asLong();
@@ -110,8 +112,8 @@ public class RemoteSwitchBlockEntity extends BlockEntity implements ExtendedScre
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
         targets.clear();
         for (long packed : nbt.getLongArray("targets")) {
             targets.add(BlockPos.fromLong(packed));

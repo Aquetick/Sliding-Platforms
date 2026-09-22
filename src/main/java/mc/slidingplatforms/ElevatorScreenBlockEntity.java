@@ -416,13 +416,13 @@ public class ElevatorScreenBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
+        return createNbt(registries);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
         nbt.putString("name", name);
 
         NbtList nums = new NbtList();
@@ -445,8 +445,8 @@ public class ElevatorScreenBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
         name = nbt.getString("name");
         floorNumbers.clear();
         NbtList nums = nbt.getList("floors", NbtElement.COMPOUND_TYPE);

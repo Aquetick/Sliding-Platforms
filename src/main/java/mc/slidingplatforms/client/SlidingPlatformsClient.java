@@ -1,5 +1,7 @@
 package mc.slidingplatforms.client;
 
+import mc.slidingplatforms.client.ClientNet;
+
 import mc.slidingplatforms.ModEntities;
 import mc.slidingplatforms.ModScreens;
 import mc.slidingplatforms.SlidingPlatformEntity;
@@ -41,19 +43,20 @@ public class SlidingPlatformsClient implements ClientModInitializer {
         HandledScreens.register(ModScreens.PLATFORM_CASCADE, PlatformCascadeScreen::new);
         HandledScreens.register(ModScreens.CONFIG, ModConfigScreen::new);
 
-        ClientPlayNetworking.registerGlobalReceiver(SlidingPlatforms.CFG_SYNC, (client, handler, buf, responseSender) -> {
+        ClientNet.registerClientReceiver(SlidingPlatforms.CFG_SYNC, (buf) -> { var client = net.minecraft.client.MinecraftClient.getInstance();
             String json = buf.readString();
             client.execute(() -> ClientConfig.applyJson(json));
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(SlidingPlatforms.RELOAD, (client, handler, buf, responseSender) ->
-                client.execute(() -> client.reloadResources()));
+        ClientNet.registerClientReceiver(SlidingPlatforms.RELOAD, (buf) -> {
+            net.minecraft.client.MinecraftClient.getInstance().execute(
+                () -> net.minecraft.client.MinecraftClient.getInstance().reloadResources());
+        });
 
         net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(
                 mc.slidingplatforms.ModBlocks.ELEVATOR_SCREEN_BE, ElevatorScreenRenderer::new);
 
-        ClientPlayNetworking.registerGlobalReceiver(SlidingPlatformEntity.DATA_PACKET,
-                (client, handler, buf, responseSender) -> {
+        ClientNet.registerClientReceiver(SlidingPlatformEntity.DATA_PACKET, (buf) -> { var client = net.minecraft.client.MinecraftClient.getInstance();
                     int entityId = buf.readVarInt();
                     NbtCompound data = buf.readNbt();
                     client.execute(() -> {
@@ -77,8 +80,7 @@ public class SlidingPlatformsClient implements ClientModInitializer {
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(SlidingPlatformEntity.ARRIVE_PACKET,
-                (client, handler, buf, responseSender) -> {
+        ClientNet.registerClientReceiver(SlidingPlatformEntity.ARRIVE_PACKET, (buf) -> { var client = net.minecraft.client.MinecraftClient.getInstance();
                     int entityId = buf.readVarInt();
                     long at = buf.readLong();
                     boolean loud = buf.readBoolean();
@@ -86,8 +88,7 @@ public class SlidingPlatformsClient implements ClientModInitializer {
                             PlatformSoundManager.onPlatformArrived(entityId, BlockPos.fromLong(at), loud));
                 });
 
-        ClientPlayNetworking.registerGlobalReceiver(SlidingPlatforms.SELECTION_SYNC,
-                (client, handler, buf, responseSender) -> {
+        ClientNet.registerClientReceiver(SlidingPlatforms.SELECTION_SYNC, (buf) -> { var client = net.minecraft.client.MinecraftClient.getInstance();
                     boolean isActive = buf.readBoolean();
                     int count = buf.readVarInt();
                     List<BlockPos> positions = new ArrayList<>(count);
@@ -104,23 +105,19 @@ public class SlidingPlatformsClient implements ClientModInitializer {
 
             var langBuf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
             langBuf.writeString(client.getLanguageManager().getLanguage(), 8);
-            ClientPlayNetworking.send(SlidingPlatforms.CLIENT_LANG, langBuf);
+            ClientNet.send(SlidingPlatforms.CLIENT_LANG, langBuf);
             ServerSounds.onJoin(handler);
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(SlidingPlatforms.SOUND_LIST,
-                (client, handler, buf, responseSender) -> ServerSounds.onList(buf));
-        ClientPlayNetworking.registerGlobalReceiver(SlidingPlatforms.SOUND_ACK,
-                (client, handler, buf, responseSender) -> ServerSounds.onAck(buf));
+        ClientNet.registerClientReceiver(SlidingPlatforms.SOUND_LIST, (buf) -> ServerSounds.onList(buf));
+        ClientNet.registerClientReceiver(SlidingPlatforms.SOUND_ACK, (buf) -> ServerSounds.onAck(buf));
 
-        ClientPlayNetworking.registerGlobalReceiver(SlidingPlatforms.SOUND_PACK_BEGIN,
-                (client, handler, buf, responseSender) -> {
+        ClientNet.registerClientReceiver(SlidingPlatforms.SOUND_PACK_BEGIN, (buf) -> { var client = net.minecraft.client.MinecraftClient.getInstance();
                     int total = buf.readVarInt();
                     String sha = buf.readString(40);
                     ServerPackMirror.onBegin(total, sha);
                 });
-        ClientPlayNetworking.registerGlobalReceiver(SlidingPlatforms.SOUND_PACK_CHUNK,
-                (client, handler, buf, responseSender) -> {
+        ClientNet.registerClientReceiver(SlidingPlatforms.SOUND_PACK_CHUNK, (buf) -> { var client = net.minecraft.client.MinecraftClient.getInstance();
                     int len = buf.readVarInt();
                     if (len < 0 || len > 20_000) { ServerPackMirror.reset(); return; }
                     byte[] part = new byte[len];
@@ -130,8 +127,7 @@ public class SlidingPlatformsClient implements ClientModInitializer {
 
         BoxSelection.init();
 
-        ClientPlayNetworking.registerGlobalReceiver(SlidingPlatforms.ZONE_SYNC,
-                (client, handler, buf, responseSender) -> {
+        ClientNet.registerClientReceiver(SlidingPlatforms.ZONE_SYNC, (buf) -> { var client = net.minecraft.client.MinecraftClient.getInstance();
                     boolean isActive = buf.readBoolean();
                     BlockPos ctrl = buf.readBlockPos();
                     boolean hasZone = buf.readBoolean();

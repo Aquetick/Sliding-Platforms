@@ -99,7 +99,7 @@ public class DragSlider extends ClickableWidget {
     }
 
     @Override
-    protected void renderButton(DrawContext ctx, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
         int x = getX(), y = getY(), w = getWidth(), h = getHeight();
 
         int border = 0xFF6A6A75;
